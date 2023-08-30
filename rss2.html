@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSS Feed Example</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        #rss-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            font-family: Arial, sans-serif;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0070c9;
+        }
+    </style>
+</head>
+<body>
+    <div id="rss-container">
+        <h2>RSS Feed</h2>
+        <div id="rss-feed"></div>
+    </div>
+
+    <script>
+        var rssToJsonApi = 'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.ruv.is%2Frss%2Ffrettir';
+        var rssFeedContainer = document.getElementById('rss-feed');
+
+        // Function to fetch and display the RSS feed
+        function fetchAndDisplayRssFeed() {
+            fetch(rssToJsonApi)
+                .then(response => response.json())
+                .then(data => {
+                    // Check if the data has items
+                    if (data.items && data.items.length > 0) {
+                        // Create an HTML string to display the feed
+                        var html = '<ul>';
+                        data.items.forEach(item => {
+                            html += `<li><a href="${item.link}" target="_blank">${item.title}</a></li>`;
+                        });
+                        html += '</ul>';
+
+                        // Insert the HTML into the rss-feed container
+                        rssFeedContainer.innerHTML = html;
+                    } else {
+                        rssFeedContainer.innerHTML = 'No RSS feed items found.';
+                    }
+                })
+                .catch(error => {
+                    rssFeedContainer.innerHTML = 'Error fetching RSS feed: ' + error.message;
+                });
+        }
+
+        // Call the function to fetch and display the RSS feed
+        fetchAndDisplayRssFeed();
+    </script>
+</body>
+</html>
